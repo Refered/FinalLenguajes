@@ -1,28 +1,76 @@
+import React, { useState, useEffect } from "react";
+import ExpenseForm from "./ExpenseForm";
 
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+const App = () => {
+  const [expenses, setExpenses] = useState([]);
+  const [expenseName, setExpenseName] = useState("");
+  const [amount, setAmount] = useState("");
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
 
-function App() {
+    // Add the new expense to the local storage
+    const newExpense = {
+      expenseName,
+      amount: parseFloat(amount),
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+    const updatedExpenses = [...expenses, newExpense];
+    setExpenses(updatedExpenses);
 
-  
+    // Save expenses to local storage
+    localStorage.setItem("expenses", JSON.stringify(updatedExpenses));
 
+    // Clear form inputs
+    setExpenseName("");
+    setAmount("");
+  };
+
+  useEffect(() => {
+    // Retrieve expenses from local storage on component mount
+    const storedExpenses = localStorage.getItem("expenses");
+    if (storedExpenses) {
+      setExpenses(JSON.parse(storedExpenses));
+    }
+  }, []);
 
   return (
-    <>
-      <div className="bg-indigo-500 w-screen h-screen " >
-        <div className="flex flex-col grow p-5 items-center text-2xl ">  Control de gastos
-        <form className="border bg-indigo-100 ">
-          s
-        </form>
-        </div>
-        </div>
- 
-    </>
-  )
-}
+    <form onSubmit={handleFormSubmit}>
+      <label>
+        Nombre del gasto:
+        <input
+          type="text"
+          value={expenseName}
+          onChange={(e) => setExpenseName(e.target.value)}
+        />
+      </label>
+      <br />
+      <label>
+        Cantidad:
+        <input
+          type="text"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+      </label>
+      <br />
+      <button className="" type="submit">
+        Agregar Gasto
+      </button>
 
-export default App
+      {/* Display expenses */}
+      <div>
+        <h2>Lista de Gastos:</h2>
+        <ul>
+          {expenses.map((expense, index) => (
+            <li key={index}>
+              {expense.expenseName}: ${expense.amount}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </form>
+  );
+};
+
+export default App;
