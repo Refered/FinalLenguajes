@@ -18,7 +18,7 @@ const ExpenseForm: React.FC = () => {
     });
 
     // Limpiar el formulario después de enviar
-    setExpenseName("");
+    setExpenseName(""); 
     setAmount("");
   };
 

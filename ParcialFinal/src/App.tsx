@@ -1,75 +1,75 @@
-import React, { useState, useEffect } from "react";
-import ExpenseForm from "./ExpenseForm";
+import React, { useState } from "react";
 
 const App = () => {
-  const [expenses, setExpenses] = useState([]);
   const [expenseName, setExpenseName] = useState("");
   const [amount, setAmount] = useState("");
+  const [expenses, setExpenses] = useState([]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    // Add the new expense to the local storage
-    const newExpense = {
-      expenseName,
-      amount: parseFloat(amount),
-    };
+    if (typeof expenseName !== "string" || expenseName.trim() === "") {
+      alert("Por favor, ingrese un nombre de gasto válido.");
+      return;
+    }
 
-    const updatedExpenses = [...expenses, newExpense];
-    setExpenses(updatedExpenses);
+    const amountValue = parseInt(amount, 10);
+    if (isNaN(amountValue) || amountValue !== parseInt(amount, 10)) {
+      alert("Por favor, ingrese una cantidad válida como número entero.");
+      return;
+    }
 
-    // Save expenses to local storage
-    localStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+    const newExpense = { expenseName, amount: amountValue };
+    setExpenses([...expenses, newExpense]);
 
-    // Clear form inputs
     setExpenseName("");
     setAmount("");
   };
 
-  useEffect(() => {
-    // Retrieve expenses from local storage on component mount
-    const storedExpenses = localStorage.getItem("expenses");
-    if (storedExpenses) {
-      setExpenses(JSON.parse(storedExpenses));
-    }
-  }, []);
+  const handleDeleteExpense = (index) => {
+    const updatedExpenses = [...expenses];
+    updatedExpenses.splice(index, 1);
+    setExpenses(updatedExpenses);
+  };
 
   return (
-    <form onSubmit={handleFormSubmit}>
-      <label>
-        Nombre del gasto:
-        <input
-          type="text"
-          value={expenseName}
-          onChange={(e) => setExpenseName(e.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        Cantidad:
-        <input
-          type="text"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-      </label>
-      <br />
-      <button className="" type="submit">
-        Agregar Gasto
-      </button>
+    <div className="bg-indigo-500 w-screen h-screen">
+      <form className="flex flex-col grow p-5 items-center text-2xl " onSubmit={handleFormSubmit}>
+        <label>
+          Nombre del gasto:
+          <input
+            type="text"
+            value={expenseName}
+            onChange={(e) => setExpenseName(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Cantidad:
+          <input
+            type="text"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+        </label>
+        <br />
+        <button className="" type="submit">
+          Agregar Gasto
+        </button>
 
-      {/* Display expenses */}
-      <div>
-        <h2>Lista de Gastos:</h2>
-        <ul>
-          {expenses.map((expense, index) => (
-            <li key={index}>
-              {expense.expenseName}: ${expense.amount}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </form>
+        <div className="flex flex-col grow p-5 items-center text-2xl ">
+          <h2>Lista de Gastos:</h2>
+          <ul>
+            {expenses.map((expense, index) => (
+              <li key={index}>
+                {expense.expenseName}: ${expense.amount}
+                <button onClick={() => handleDeleteExpense(index)}>Borrar</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </form>
+    </div>
   );
 };
 
