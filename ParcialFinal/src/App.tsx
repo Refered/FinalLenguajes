@@ -32,6 +32,8 @@ const App = () => {
     setExpenses(updatedExpenses);
   };
 
+  const totalExpenses = expenses.reduce((total, expense) => total + expense.amount, 0);
+
   return (
     <div className="bg-indigo-500 w-screen h-screen">
       <form className="flex flex-col grow p-5 items-center text-2xl " onSubmit={handleFormSubmit}>
@@ -67,6 +69,10 @@ const App = () => {
               </li>
             ))}
           </ul>
+        </div>
+
+        <div className="flex flex-col grow p-5 items-center text-2xl">
+          <h2>Total de Gastos: ${totalExpenses}</h2>
         </div>
       </form>
     </div>
