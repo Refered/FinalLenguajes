@@ -8,6 +8,7 @@ const App = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
+  
     if (typeof expenseName !== "string" || expenseName.trim() === "") {
       alert("Por favor, ingrese un nombre de gasto válido.");
       return;
@@ -35,9 +36,11 @@ const App = () => {
   const totalExpenses = expenses.reduce((total, expense) => total + expense.amount, 0);
 
   return (
-    <div className="bg-indigo-500 w-screen h-screen">
-      <form className="flex flex-col grow p-5 items-center text-2xl " onSubmit={handleFormSubmit}>
-        <label>
+    <div className="flex justify-center  p-4 bg-sky-200 w-screen h-screen ">
+      
+      <form className="font-extrabold	flex flex-col shadow-md max-h-[700px] max-w-[400px] rounded-xl grow p-5 text-2xl border-gray-950 justify-center bg-slate-200 " onSubmit={handleFormSubmit}>
+
+          <label >
           Nombre del gasto:
           <input
             type="text"
@@ -48,17 +51,17 @@ const App = () => {
         <br />
         <label>
           Cantidad:
-          <input
+          <input 
             type="text"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
         </label>
         <br />
-        <button className="" type="submit">
+        <button className="p-5 rounded-full hover:bg-sky-200" type="submit">
           Agregar Gasto
         </button>
-
+        
         <div className="flex flex-col grow p-5 items-center text-2xl ">
           <h2>Lista de Gastos:</h2>
           <ul>
